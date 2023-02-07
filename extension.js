@@ -80,46 +80,43 @@ Date.prototype.yyyymmdd = function () {
 
 
 // Handle Requests API
-async function handle_request_api() {
+function handle_request_api() {
     let dollarQuotation = null;
 
-    try {
-        // Create a new Soup Session
-        if (!session) {
-            session = new Soup.Session({timeout: 10});
-        }
-        let time = new Date();
-        // Create body of Soup request
-        let message = Soup.Message.new_from_encoded_form(
-            "GET", "https://lirarate.org/wp-json/lirarate/v2/rates", Soup.form_encode_hash({
-                "currency": "LBP",
-                "_ver": "t" + time.yyyymmdd()
-            }));
+    // Create a new Soup Session
+    if (!session) {
+        session = new Soup.Session();
+    }
+    let time = new Date();
+    const uri = Soup.URI.new('https://lirarate.org/wp-json/lirarate/v2/rates?currency=LBP&_ver=' + "t" + time.yyyymmdd())
+    // Create body of Soup request
+    let message = Soup.Message.new_from_uri(
+        'GET',
+        uri
+    );
+    session.queue_message(message, () => {
 
-        // Send Soup request to API Server
-        await session.send_and_read_async(message, GLib.PRIORITY_DEFAULT, null, (_, r0) => {
-            let text = session.send_and_read_finish(r0);
-            let response = new TextDecoder().decode(text.get_data());
-            const body_response = JSON.parse(response);
-            dollarQuotation = body_response["sell"][body_response["sell"].length - 1][1];
-
-            // Sent text in Widget
+        if (!message.response_body.data) {
             panelButtonText = new St.Label({
-                text: " USD: LBP " + dollarQuotation,
+                text : "Not Working",
                 y_align: Clutter.ActorAlign.CENTER,
             });
             panelButton.set_child(panelButtonText);
-
-            // Finish Soup Session
             session.abort();
-        });
-    } catch (error) {
-        log(`Traceback Error in [handle_request_api]: ${error}`);
+            return;
+        }
+        let body_response = JSON.parse(message.response_body.data);
+
+        dollarQuotation = body_response["sell"][body_response["sell"].length - 1][1];
+
         panelButtonText = new St.Label({
-            text: "Not working",
+            text: " USD: LBP " + dollarQuotation,
             y_align: Clutter.ActorAlign.CENTER,
         });
+
         panelButton.set_child(panelButtonText);
         session.abort();
-    }
+        return;
+    });
+    return;
 }
