@@ -1,0 +1,8 @@
+{
+  "name": "Ade Dollar",
+  "description": "Displays the exchange rate USB to LBP",
+  "uuid": "adeDollar@sergeZoghbi",
+  "shell-version": [
+    "42"
+  ]
+}
