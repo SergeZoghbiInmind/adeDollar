@@ -28,6 +28,7 @@ const PanelMenu = imports.ui.panelMenu;
 let panelButton;
 let panelButtonText;
 let session;
+let oldValue = 0;
 let sourceId = null;
 
 // Start application
@@ -102,14 +103,24 @@ async function handle_request_api() {
             let response = new TextDecoder().decode(text.get_data());
             const body_response = JSON.parse(response);
             dollarQuotation = body_response["sell"][body_response["sell"].length - 1][1];
+            let arrow = "";
 
-            // Sent text in Widget
+            if (oldValue !== dollarQuotation) {
+                if (oldValue < dollarQuotation) {
+                    arrow = "⬆";
+                } else {
+                    arrow = "⬇";
+                }
+            }
+
+
             panelButtonText = new St.Label({
-                text: " USD: LBP " + dollarQuotation,
+                text: "USD: LBP " + dollarQuotation + " " + arrow,
                 y_align: Clutter.ActorAlign.CENTER,
             });
-            panelButton.set_child(panelButtonText);
 
+            panelButton.set_child(panelButtonText);
+            oldValue = dollarQuotation;
             // Finish Soup Session
             session.abort();
         });
