@@ -110,7 +110,7 @@ function handle_request_api() {
 
         dollarQuotation = body_response["sell"][body_response["sell"].length - 1][1];
 
-        let arrow = "";
+        let arrow = "⇔";
 
         if (oldValue !== dollarQuotation) {
             if (oldValue < dollarQuotation) {
@@ -122,7 +122,7 @@ function handle_request_api() {
 
 
         panelButtonText = new St.Label({
-            text: " USD: LBP " + dollarQuotation + " " + arrow,
+            text: "1$=LBP " + dollarQuotation + " " + arrow,
             y_align: Clutter.ActorAlign.CENTER,
         });
 
