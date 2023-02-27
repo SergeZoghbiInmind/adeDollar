@@ -29,6 +29,7 @@ let panelButton;
 let panelButtonText;
 let session;
 let sourceId = null;
+let oldValue = 0;
 
 // Start application
 function init() {
@@ -98,7 +99,7 @@ function handle_request_api() {
 
         if (!message.response_body.data) {
             panelButtonText = new St.Label({
-                text : "Not Working",
+                text: "Not Working",
                 y_align: Clutter.ActorAlign.CENTER,
             });
             panelButton.set_child(panelButtonText);
@@ -109,8 +110,19 @@ function handle_request_api() {
 
         dollarQuotation = body_response["sell"][body_response["sell"].length - 1][1];
 
+        let arrow = "";
+
+        if (oldValue !== dollarQuotation) {
+            if (oldValue < dollarQuotation) {
+                arrow = "⬆";
+            } else {
+                arrow = "⬇";
+            }
+        }
+
+
         panelButtonText = new St.Label({
-            text: " USD: LBP " + dollarQuotation,
+            text: " USD: LBP " + dollarQuotation + " " + arrow,
             y_align: Clutter.ActorAlign.CENTER,
         });
 
