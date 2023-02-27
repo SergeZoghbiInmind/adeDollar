@@ -103,7 +103,7 @@ async function handle_request_api() {
             let response = new TextDecoder().decode(text.get_data());
             const body_response = JSON.parse(response);
             dollarQuotation = body_response["sell"][body_response["sell"].length - 1][1];
-            let arrow = "";
+            let arrow = "⇔";
 
             if (oldValue !== dollarQuotation) {
                 if (oldValue < dollarQuotation) {
@@ -115,7 +115,7 @@ async function handle_request_api() {
 
 
             panelButtonText = new St.Label({
-                text: "USD: LBP " + dollarQuotation + " " + arrow,
+                text: "1$=LBP " + dollarQuotation + " " + arrow,
                 y_align: Clutter.ActorAlign.CENTER,
             });
 
