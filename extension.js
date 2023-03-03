@@ -29,6 +29,7 @@ let panelButton;
 let panelButtonText;
 let session;
 let oldValue = 0;
+let arrow = "";
 let sourceId = null;
 
 // Start application
@@ -103,14 +104,15 @@ async function handle_request_api() {
             let response = new TextDecoder().decode(text.get_data());
             const body_response = JSON.parse(response);
             dollarQuotation = body_response["sell"][body_response["sell"].length - 1][1];
-            let arrow = "⇔";
 
-            if (oldValue !== dollarQuotation) {
-                if (oldValue < dollarQuotation) {
+            let newValue = parseInt(dollarQuotation);
+            if (oldValue !== newValue) {
+                if (oldValue < newValue) {
                     arrow = "⬆";
                 } else {
                     arrow = "⬇";
                 }
+                oldValue = dollarQuotation;
             }
 
 
@@ -120,7 +122,6 @@ async function handle_request_api() {
             });
 
             panelButton.set_child(panelButtonText);
-            oldValue = dollarQuotation;
             // Finish Soup Session
             session.abort();
         });
