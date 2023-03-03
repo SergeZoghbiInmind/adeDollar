@@ -29,6 +29,7 @@ let panelButton;
 let panelButtonText;
 let session;
 let sourceId = null;
+let arrow = "";
 let oldValue = 0;
 
 // Start application
@@ -110,14 +111,14 @@ function handle_request_api() {
 
         dollarQuotation = body_response["sell"][body_response["sell"].length - 1][1];
 
-        let arrow = "⇔";
-
-        if (oldValue !== dollarQuotation) {
-            if (oldValue < dollarQuotation) {
+        let newValue = parseInt(dollarQuotation);
+        if (oldValue !== newValue) {
+            if (oldValue < newValue) {
                 arrow = "⬆";
             } else {
                 arrow = "⬇";
             }
+            oldValue = dollarQuotation;
         }
 
 
